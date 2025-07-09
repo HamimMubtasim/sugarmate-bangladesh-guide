@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { Camera, X, FlashOn, FlashOff, RotateCw } from 'lucide-react';
+import { Camera, X, Flashlight, FlashlightOff, RotateCw } from 'lucide-react';
 import Header from '@/components/Layout/Header';
 import BottomNavigation from '@/components/Layout/BottomNavigation';
 
@@ -129,9 +129,9 @@ const FoodScanner = () => {
                     }`}
                   >
                     {flashEnabled ? (
-                      <FlashOn size={24} className="text-white" />
+                      <Flashlight size={24} className="text-white" />
                     ) : (
-                      <FlashOff size={24} className="text-white" />
+                      <FlashlightOff size={24} className="text-white" />
                     )}
                   </button>
                   
