@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import GlucoseLog from "./pages/GlucoseLog";
 import FoodScanner from "./pages/FoodScanner";
+import Medicine from "./pages/Medicine";
 import Profile from "./pages/Profile";
 import Onboarding from "./pages/Onboarding";
 import NotFound from "./pages/NotFound";
@@ -30,6 +31,7 @@ const App = () => (
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/glucose" element={<GlucoseLog />} />
               <Route path="/scanner" element={<FoodScanner />} />
+              <Route path="/medicine" element={<Medicine />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

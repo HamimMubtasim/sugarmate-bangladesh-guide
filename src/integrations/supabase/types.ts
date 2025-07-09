@@ -14,7 +14,218 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      glucose_logs: {
+        Row: {
+          created_at: string | null
+          glucose_level: number
+          id: string
+          logged_at: string | null
+          meal_context: string | null
+          notes: string | null
+          unit: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          glucose_level: number
+          id?: string
+          logged_at?: string | null
+          meal_context?: string | null
+          notes?: string | null
+          unit?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          glucose_level?: number
+          id?: string
+          logged_at?: string | null
+          meal_context?: string | null
+          notes?: string | null
+          unit?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      medicine_intake_logs: {
+        Row: {
+          id: string
+          medicine_id: string | null
+          notes: string | null
+          schedule_id: string | null
+          status: string | null
+          taken_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          id?: string
+          medicine_id?: string | null
+          notes?: string | null
+          schedule_id?: string | null
+          status?: string | null
+          taken_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          id?: string
+          medicine_id?: string | null
+          notes?: string | null
+          schedule_id?: string | null
+          status?: string | null
+          taken_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medicine_intake_logs_medicine_id_fkey"
+            columns: ["medicine_id"]
+            isOneToOne: false
+            referencedRelation: "medicines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medicine_intake_logs_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "medicine_schedules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medicine_schedules: {
+        Row: {
+          created_at: string | null
+          days_of_week: number[] | null
+          id: string
+          is_active: boolean | null
+          medicine_id: string | null
+          reminder_enabled: boolean | null
+          time_of_day: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          days_of_week?: number[] | null
+          id?: string
+          is_active?: boolean | null
+          medicine_id?: string | null
+          reminder_enabled?: boolean | null
+          time_of_day: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          days_of_week?: number[] | null
+          id?: string
+          is_active?: boolean | null
+          medicine_id?: string | null
+          reminder_enabled?: boolean | null
+          time_of_day?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medicine_schedules_medicine_id_fkey"
+            columns: ["medicine_id"]
+            isOneToOne: false
+            referencedRelation: "medicines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medicines: {
+        Row: {
+          created_at: string | null
+          current_stock: number | null
+          dosage: string | null
+          expiry_date: string | null
+          id: string
+          low_stock_threshold: number | null
+          manufacturer: string | null
+          name: string
+          notes: string | null
+          type: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_stock?: number | null
+          dosage?: string | null
+          expiry_date?: string | null
+          id?: string
+          low_stock_threshold?: number | null
+          manufacturer?: string | null
+          name: string
+          notes?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_stock?: number | null
+          dosage?: string | null
+          expiry_date?: string | null
+          id?: string
+          low_stock_threshold?: number | null
+          manufacturer?: string | null
+          name?: string
+          notes?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          age: number | null
+          created_at: string | null
+          diabetes_type: string | null
+          diagnosis_year: number | null
+          gender: string | null
+          healthcare_provider_contact: string | null
+          healthcare_provider_name: string | null
+          id: string
+          name: string | null
+          phone: string | null
+          preferred_language: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          age?: number | null
+          created_at?: string | null
+          diabetes_type?: string | null
+          diagnosis_year?: number | null
+          gender?: string | null
+          healthcare_provider_contact?: string | null
+          healthcare_provider_name?: string | null
+          id?: string
+          name?: string | null
+          phone?: string | null
+          preferred_language?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          age?: number | null
+          created_at?: string | null
+          diabetes_type?: string | null
+          diagnosis_year?: number | null
+          gender?: string | null
+          healthcare_provider_contact?: string | null
+          healthcare_provider_name?: string | null
+          id?: string
+          name?: string | null
+          phone?: string | null
+          preferred_language?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

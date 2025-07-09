@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Activity, Scan, User } from 'lucide-react';
+import { Home, Activity, Scan, User, Pill } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const BottomNavigation = () => {
@@ -13,6 +13,7 @@ const BottomNavigation = () => {
     { icon: Home, label: t('dashboard'), path: '/dashboard' },
     { icon: Activity, label: t('glucose'), path: '/glucose' },
     { icon: Scan, label: t('scanner'), path: '/scanner', isCenter: true },
+    { icon: Pill, label: t('medicine'), path: '/medicine' },
     { icon: User, label: t('profile'), path: '/profile' },
   ];
 

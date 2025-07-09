@@ -15,6 +15,7 @@ const translations = {
     dashboard: 'Dashboard',
     glucose: 'Glucose',
     scanner: 'Scan Food',
+    medicine: 'Medicine',
     profile: 'Profile',
     
     // Dashboard
@@ -43,6 +44,7 @@ const translations = {
     dashboard: 'ড্যাশবোর্ড',
     glucose: 'গ্লুকোজ',
     scanner: 'খাবার স্ক্যান',
+    medicine: 'ওষুধ',
     profile: 'প্রোফাইল',
     
     // Dashboard

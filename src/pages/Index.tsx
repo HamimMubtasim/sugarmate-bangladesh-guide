@@ -37,7 +37,7 @@ const Index = () => {
           </svg>
         </div>
         
-        <h1 className="text-4xl font-bold text-white mb-4">SugarMate</h1>
+        <h1 className="text-4xl font-bold text-white mb-4">Glucovia</h1>
         <p className="text-xl text-white/90 mb-8">Your Diabetes Companion</p>
         
         <div className="flex justify-center">
