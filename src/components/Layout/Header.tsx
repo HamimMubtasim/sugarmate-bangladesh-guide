@@ -27,12 +27,18 @@ const Header: React.FC<HeaderProps> = ({
         
         <div className="flex items-center space-x-3">
           {showNotifications && (
-            <button className="p-2 rounded-xl bg-gray-100/80 backdrop-blur-sm">
+            <button 
+              onClick={() => window.location.href = '/notifications'}
+              className="p-2 rounded-xl bg-gray-100/80 backdrop-blur-sm hover:bg-gray-200/80 transition-colors"
+            >
               <Bell size={20} className="text-gray-700" />
             </button>
           )}
           {showSettings && (
-            <button className="p-2 rounded-xl bg-gray-100/80 backdrop-blur-sm">
+            <button 
+              onClick={() => window.location.href = '/app-settings'}
+              className="p-2 rounded-xl bg-gray-100/80 backdrop-blur-sm hover:bg-gray-200/80 transition-colors"
+            >
               <Settings size={20} className="text-gray-700" />
             </button>
           )}

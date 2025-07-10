@@ -91,7 +91,7 @@ const Dashboard = () => {
         />
         
         {/* Health Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-4">
           {/* Glucose Chart */}
           <GlucoseCard
             currentLevel={mockData.glucose.currentLevel}

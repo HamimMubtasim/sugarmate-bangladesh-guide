@@ -12,6 +12,11 @@ import GlucoseLog from "./pages/GlucoseLog";
 import FoodScanner from "./pages/FoodScanner";
 import Medicine from "./pages/Medicine";
 import Profile from "./pages/Profile";
+import PersonalInformation from "./pages/PersonalInformation";
+import MedicalRecords from "./pages/MedicalRecords";
+import Notifications from "./pages/Notifications";
+import LanguageRegion from "./pages/LanguageRegion";
+import AppSettings from "./pages/AppSettings";
 import Onboarding from "./pages/Onboarding";
 import NotFound from "./pages/NotFound";
 
@@ -25,16 +30,21 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/onboarding" element={<Onboarding />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/glucose" element={<GlucoseLog />} />
-              <Route path="/scanner" element={<FoodScanner />} />
-              <Route path="/medicine" element={<Medicine />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/glucose" element={<GlucoseLog />} />
+          <Route path="/scanner" element={<FoodScanner />} />
+          <Route path="/medicine" element={<Medicine />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/personal-information" element={<PersonalInformation />} />
+          <Route path="/medical-records" element={<MedicalRecords />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/language-region" element={<LanguageRegion />} />
+          <Route path="/app-settings" element={<AppSettings />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
           </BrowserRouter>
         </AuthProvider>
       </LanguageProvider>

@@ -2,18 +2,20 @@
 import React from 'react';
 import { User, Settings, FileText, Bell, Globe, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Layout/Header';
 import BottomNavigation from '@/components/Layout/BottomNavigation';
 
 const Profile = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const menuItems = [
-    { icon: User, label: 'Personal Information', action: () => {} },
-    { icon: FileText, label: 'Medical Records', action: () => {} },
-    { icon: Bell, label: 'Notifications', action: () => {} },
-    { icon: Globe, label: 'Language & Region', action: () => {} },
-    { icon: Settings, label: 'App Settings', action: () => {} },
+    { icon: User, label: 'Personal Information', action: () => navigate('/personal-information') },
+    { icon: FileText, label: 'Medical Records', action: () => navigate('/medical-records') },
+    { icon: Bell, label: 'Notifications', action: () => navigate('/notifications') },
+    { icon: Globe, label: 'Language & Region', action: () => navigate('/language-region') },
+    { icon: Settings, label: 'App Settings', action: () => navigate('/app-settings') },
     { icon: LogOut, label: 'Sign Out', action: logout, danger: true },
   ];
 
@@ -89,11 +91,6 @@ const Profile = () => {
           })}
         </div>
 
-        {/* App Info */}
-        <div className="text-center pt-4">
-          <p className="text-sm text-gray-500">SugarMate v1.0.0</p>
-          <p className="text-xs text-gray-400 mt-1">Made with ❤️ for Bangladesh</p>
-        </div>
       </div>
       
       <BottomNavigation />

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Plus, Calendar, TrendingUp } from 'lucide-react';
 import Header from '@/components/Layout/Header';
 import BottomNavigation from '@/components/Layout/BottomNavigation';
+import GlucoseStatus from './GlucoseStatus';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const GlucoseLog = () => {
@@ -40,25 +41,12 @@ const GlucoseLog = () => {
       
       <div className="px-6 pt-6 pb-24 space-y-6">
         {/* Quick Stats */}
-        <div className="grid grid-cols-3 gap-4">
-          <div className="p-4 bg-white rounded-2xl shadow-sm border border-gray-100 text-center">
-            <h4 className="text-sm text-gray-600 mb-1">Current</h4>
-            <p className="text-2xl font-bold text-gray-800">120</p>
-            <p className="text-xs text-green-600">Normal</p>
-          </div>
-          
-          <div className="p-4 bg-white rounded-2xl shadow-sm border border-gray-100 text-center">
-            <h4 className="text-sm text-gray-600 mb-1">Avg Today</h4>
-            <p className="text-2xl font-bold text-gray-800">125</p>
-            <p className="text-xs text-green-600">+5 from yesterday</p>
-          </div>
-          
-          <div className="p-4 bg-white rounded-2xl shadow-sm border border-gray-100 text-center">
-            <h4 className="text-sm text-gray-600 mb-1">Target</h4>
-            <p className="text-2xl font-bold text-gray-800">110</p>
-            <p className="text-xs text-gray-500">mg/dL</p>
-          </div>
-        </div>
+        <GlucoseStatus
+          current={120}
+          avgToday={125}
+          target={110}
+          unit="mg/dL"
+        />
 
         {/* Chart Section */}
         <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-6">
