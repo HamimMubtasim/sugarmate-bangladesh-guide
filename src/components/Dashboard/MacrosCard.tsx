@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface MacrosCardProps {
   carbs: { current: number; target: number; unit: string };
@@ -7,23 +8,27 @@ interface MacrosCardProps {
 }
 
 const MacrosCard: React.FC<MacrosCardProps> = ({ carbs, protein, fat }) => {
+  const navigate = useNavigate();
   const getMacroProgress = (current: number, target: number) => 
     Math.min((current / target) * 100, 100);
 
   return (
-    <div className="p-6 bg-white rounded-3xl shadow-lg border border-gray-100">
-      <h3 className="text-lg font-semibold text-gray-800 mb-6">Macronutrients</h3>
+    <div 
+      onClick={() => navigate('/food-logs')}
+      className="p-4 bg-white rounded-3xl shadow-lg border border-gray-100 cursor-pointer hover:scale-105 transition-all duration-300"
+    >
+      <h3 className="text-base font-semibold text-gray-800 mb-4">Macros</h3>
       
-      <div className="space-y-6">
+      <div className="space-y-3">
         {/* Carbs */}
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700">CARBS</span>
-            <span className="text-sm text-gray-600">{carbs.current}/{carbs.target}{carbs.unit}</span>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs font-medium text-blue-600">CARBS</span>
+            <span className="text-xs text-gray-600">{carbs.current}g</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-1.5">
             <div 
-              className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+              className="bg-blue-500 h-1.5 rounded-full transition-all duration-300"
               style={{ width: `${getMacroProgress(carbs.current, carbs.target)}%` }}
             />
           </div>
@@ -31,13 +36,13 @@ const MacrosCard: React.FC<MacrosCardProps> = ({ carbs, protein, fat }) => {
 
         {/* Protein */}
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700">PROTEIN</span>
-            <span className="text-sm text-gray-600">{protein.current}/{protein.target}{protein.unit}</span>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs font-medium text-green-600">PROTEIN</span>
+            <span className="text-xs text-gray-600">{protein.current}g</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-1.5">
             <div 
-              className="bg-green-500 h-2 rounded-full transition-all duration-300"
+              className="bg-green-500 h-1.5 rounded-full transition-all duration-300"
               style={{ width: `${getMacroProgress(protein.current, protein.target)}%` }}
             />
           </div>
@@ -45,13 +50,13 @@ const MacrosCard: React.FC<MacrosCardProps> = ({ carbs, protein, fat }) => {
 
         {/* Fat */}
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700">FAT</span>
-            <span className="text-sm text-gray-600">{fat.current}/{fat.target}{fat.unit}</span>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs font-medium text-yellow-600">FAT</span>
+            <span className="text-xs text-gray-600">{fat.current}g</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-1.5">
             <div 
-              className="bg-red-500 h-2 rounded-full transition-all duration-300"
+              className="bg-yellow-500 h-1.5 rounded-full transition-all duration-300"
               style={{ width: `${getMacroProgress(fat.current, fat.target)}%` }}
             />
           </div>

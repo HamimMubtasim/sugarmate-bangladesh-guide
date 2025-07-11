@@ -14,6 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
+      food_logs: {
+        Row: {
+          actual_calories: number | null
+          actual_carbs: number | null
+          actual_fat: number | null
+          actual_protein: number | null
+          barcode: string | null
+          brand: string | null
+          calories_per_100g: number
+          carbs_per_100g: number
+          created_at: string
+          fat_per_100g: number
+          fiber_per_100g: number | null
+          food_name: string
+          id: string
+          image_url: string | null
+          logged_at: string
+          portion_percentage: number
+          protein_per_100g: number
+          sodium_per_100g: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          actual_calories?: number | null
+          actual_carbs?: number | null
+          actual_fat?: number | null
+          actual_protein?: number | null
+          barcode?: string | null
+          brand?: string | null
+          calories_per_100g?: number
+          carbs_per_100g?: number
+          created_at?: string
+          fat_per_100g?: number
+          fiber_per_100g?: number | null
+          food_name: string
+          id?: string
+          image_url?: string | null
+          logged_at?: string
+          portion_percentage?: number
+          protein_per_100g?: number
+          sodium_per_100g?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          actual_calories?: number | null
+          actual_carbs?: number | null
+          actual_fat?: number | null
+          actual_protein?: number | null
+          barcode?: string | null
+          brand?: string | null
+          calories_per_100g?: number
+          carbs_per_100g?: number
+          created_at?: string
+          fat_per_100g?: number
+          fiber_per_100g?: number | null
+          food_name?: string
+          id?: string
+          image_url?: string | null
+          logged_at?: string
+          portion_percentage?: number
+          protein_per_100g?: number
+          sodium_per_100g?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       glucose_logs: {
         Row: {
           created_at: string | null

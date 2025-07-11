@@ -174,7 +174,7 @@ const Onboarding = () => {
               </div>
               
               <p className="text-gray-600 leading-relaxed">
-                Welcome to SugarMate! Your personalized diabetes management app is ready. 
+                Welcome to Glucovia! Your personalized diabetes management app is ready. 
                 Track your glucose levels, scan food, and get AI-powered insights to help 
                 manage your health better.
               </p>

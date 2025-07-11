@@ -1,14 +1,41 @@
 
 import React, { useState, useRef } from 'react';
-import { Camera, X, Flashlight, FlashlightOff, RotateCw } from 'lucide-react';
+import { Camera, X, Flashlight, FlashlightOff, RotateCw, Check, Plus } from 'lucide-react';
 import Header from '@/components/Layout/Header';
 import BottomNavigation from '@/components/Layout/BottomNavigation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+
+interface NutritionData {
+  name: string;
+  brand: string;
+  calories: number;
+  carbs: number;
+  protein: number;
+  fat: number;
+  fiber: number;
+  sodium: number;
+  barcode: string;
+  image_url: string;
+}
 
 const FoodScanner = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [flashEnabled, setFlashEnabled] = useState(false);
   const [cameraFacing, setCameraFacing] = useState<'user' | 'environment'>('environment');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [showNutritionDialog, setShowNutritionDialog] = useState(false);
+  const [nutritionData, setNutritionData] = useState<NutritionData | null>(null);
+  const [portionPercentage, setPortionPercentage] = useState([100]);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   const startCamera = async () => {
     try {
@@ -38,8 +65,12 @@ const FoodScanner = () => {
     setIsScanning(false);
   };
 
-  const capturePhoto = () => {
-    if (videoRef.current) {
+  const capturePhoto = async () => {
+    if (!videoRef.current) return;
+    
+    setIsAnalyzing(true);
+    
+    try {
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
       
@@ -48,12 +79,85 @@ const FoodScanner = () => {
         canvas.height = videoRef.current.videoHeight;
         context.drawImage(videoRef.current, 0, 0);
         
-        // TODO: Send image to AI processing
-        console.log('Photo captured for AI analysis');
+        // Convert to base64
+        const imageData = canvas.toDataURL('image/jpeg', 0.8);
         
-        // Stop camera after capture
+        // Analyze with AI
+        const { data, error } = await supabase.functions.invoke('analyze-food', {
+          body: { image: imageData }
+        });
+
+        if (error) {
+          throw new Error(error.message);
+        }
+
+        if (data.nutrition) {
+          setNutritionData(data.nutrition);
+          setShowNutritionDialog(true);
+          toast({
+            title: "Food Detected!",
+            description: `Found: ${data.nutrition.name}`,
+          });
+        } else {
+          toast({
+            title: "No food detected",
+            description: data.error || "Please try again with a clearer image.",
+            variant: "destructive"
+          });
+        }
+        
         stopCamera();
       }
+    } catch (error) {
+      console.error('Error analyzing food:', error);
+      toast({
+        title: "Analysis failed",
+        description: "Please try again with a better image of food.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const logFood = async () => {
+    if (!nutritionData || !user) return;
+
+    try {
+      const { error } = await supabase
+        .from('food_logs')
+        .insert({
+          user_id: user.id,
+          food_name: nutritionData.name,
+          brand: nutritionData.brand,
+          portion_percentage: portionPercentage[0],
+          calories_per_100g: nutritionData.calories,
+          carbs_per_100g: nutritionData.carbs,
+          protein_per_100g: nutritionData.protein,
+          fat_per_100g: nutritionData.fat,
+          fiber_per_100g: nutritionData.fiber,
+          sodium_per_100g: nutritionData.sodium,
+          barcode: nutritionData.barcode,
+          image_url: nutritionData.image_url,
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Food logged successfully!",
+        description: `Added ${nutritionData.name} to your food diary.`,
+      });
+
+      setShowNutritionDialog(false);
+      setNutritionData(null);
+      setPortionPercentage([100]);
+    } catch (error) {
+      console.error('Error logging food:', error);
+      toast({
+        title: "Failed to log food",
+        description: "Please try again.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -177,6 +281,107 @@ const FoodScanner = () => {
       </div>
       
       <BottomNavigation />
+
+      {/* Nutrition Info Dialog */}
+      <Dialog open={showNutritionDialog} onOpenChange={setShowNutritionDialog}>
+        <DialogContent className="max-w-md mx-auto">
+          <DialogHeader>
+            <DialogTitle>Food Detected!</DialogTitle>
+          </DialogHeader>
+          
+          {nutritionData && (
+            <div className="space-y-4">
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg">{nutritionData.name}</CardTitle>
+                  {nutritionData.brand && (
+                    <p className="text-sm text-muted-foreground">{nutritionData.brand}</p>
+                  )}
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div className="bg-muted rounded-lg p-3">
+                      <p className="font-medium text-primary">Calories</p>
+                      <p className="text-lg font-bold">{nutritionData.calories}</p>
+                      <p className="text-xs text-muted-foreground">per 100g</p>
+                    </div>
+                    <div className="bg-muted rounded-lg p-3">
+                      <p className="font-medium text-blue-600">Carbs</p>
+                      <p className="text-lg font-bold">{nutritionData.carbs}g</p>
+                      <p className="text-xs text-muted-foreground">per 100g</p>
+                    </div>
+                    <div className="bg-muted rounded-lg p-3">
+                      <p className="font-medium text-green-600">Protein</p>
+                      <p className="text-lg font-bold">{nutritionData.protein}g</p>
+                      <p className="text-xs text-muted-foreground">per 100g</p>
+                    </div>
+                    <div className="bg-muted rounded-lg p-3">
+                      <p className="font-medium text-yellow-600">Fat</p>
+                      <p className="text-lg font-bold">{nutritionData.fat}g</p>
+                      <p className="text-xs text-muted-foreground">per 100g</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 mt-6">
+                    <Label>Portion Size: {portionPercentage[0]}%</Label>
+                    <Slider
+                      value={portionPercentage}
+                      onValueChange={setPortionPercentage}
+                      max={200}
+                      min={25}
+                      step={25}
+                      className="w-full"
+                    />
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>25%</span>
+                      <span>100%</span>
+                      <span>200%</span>
+                    </div>
+                  </div>
+
+                  <div className="bg-primary/10 rounded-lg p-3 space-y-1">
+                    <p className="text-sm font-medium">Your portion will contain:</p>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <span>Calories: {Math.round(nutritionData.calories * portionPercentage[0] / 100)}</span>
+                      <span>Carbs: {Math.round(nutritionData.carbs * portionPercentage[0] / 100)}g</span>
+                      <span>Protein: {Math.round(nutritionData.protein * portionPercentage[0] / 100)}g</span>
+                      <span>Fat: {Math.round(nutritionData.fat * portionPercentage[0] / 100)}g</span>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setShowNutritionDialog(false)}
+                      className="flex-1"
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      onClick={logFood}
+                      className="flex-1"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Log Food
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Loading overlay when analyzing */}
+      {isAnalyzing && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-3xl p-6 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <h3 className="text-lg font-semibold mb-2">Analyzing Food...</h3>
+            <p className="text-muted-foreground">Please wait while we identify your food</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

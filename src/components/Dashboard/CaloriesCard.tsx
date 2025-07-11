@@ -1,5 +1,6 @@
 import React from 'react';
 import { Flame } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface CaloriesCardProps {
   eaten: number;
@@ -16,42 +17,28 @@ const CaloriesCard: React.FC<CaloriesCardProps> = ({
   target,
   goalProgress 
 }) => {
-  const radius = 80;
-  const strokeWidth = 12;
+  const navigate = useNavigate();
+  const radius = 60;
+  const strokeWidth = 8;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (goalProgress / 100) * circumference;
 
   return (
-    <div className="p-6 bg-white rounded-3xl shadow-lg border border-gray-100">
-      <div className="flex items-center justify-between mb-6">
+    <div 
+      onClick={() => navigate('/food-logs')}
+      className="p-4 bg-white rounded-3xl shadow-lg border border-gray-100 cursor-pointer hover:scale-105 transition-all duration-300"
+    >
+      <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-xl font-bold text-gray-800">Today's calories</h3>
-          <p className="text-sm text-gray-600">Keep tracking to reach your goal</p>
+          <h3 className="text-base font-bold text-gray-800">Calories</h3>
+          <p className="text-xs text-gray-600">Tap to view logs</p>
         </div>
-        <div className="p-3 bg-primary/10 rounded-2xl">
-          <Flame size={24} className="text-primary" />
+        <div className="p-2 bg-primary/10 rounded-xl">
+          <Flame size={16} className="text-primary" />
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
-        <div className="flex flex-col space-y-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <div>
-              <p className="text-2xl font-bold text-gray-800">{eaten}</p>
-              <p className="text-sm text-gray-600">Eaten</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-3">
-            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-            <div>
-              <p className="text-2xl font-bold text-gray-800">{burned}</p>
-              <p className="text-sm text-gray-600">Burned</p>
-            </div>
-          </div>
-        </div>
-
+      <div className="flex items-center justify-center">
         <div className="relative">
           <svg width={radius * 2 + strokeWidth} height={radius * 2 + strokeWidth} className="transform -rotate-90">
             <circle
@@ -82,10 +69,15 @@ const CaloriesCard: React.FC<CaloriesCardProps> = ({
             </defs>
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-2xl font-bold text-gray-800">{remaining}</span>
-            <span className="text-xs text-gray-600">Left</span>
+            <span className="text-xl font-bold text-gray-800">{eaten}</span>
+            <span className="text-xs text-gray-600">of {target}</span>
           </div>
         </div>
+      </div>
+
+      <div className="flex justify-between text-xs text-gray-600 mt-3">
+        <span>Burned: {burned}</span>
+        <span>Left: {remaining}</span>
       </div>
     </div>
   );

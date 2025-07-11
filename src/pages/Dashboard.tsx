@@ -63,7 +63,7 @@ const Dashboard = () => {
         subtitle="Have a refreshing evening!"
       />
       
-      <div className="px-6 pt-6 pb-24 space-y-6">
+      <div className="px-6 pt-6 pb-24 space-y-6 overflow-x-hidden">
         {/* Daily Streak Card */}
         <StreakCard
           currentStreak={mockData.streak.current}
@@ -74,25 +74,8 @@ const Dashboard = () => {
         {/* AI Coach Card */}
         <AICoachCard />
         
-        {/* Calories Card */}
-        <CaloriesCard
-          eaten={mockData.calories.eaten}
-          burned={mockData.calories.burned}
-          remaining={mockData.calories.remaining}
-          target={mockData.calories.target}
-          goalProgress={mockData.calories.goalProgress}
-        />
-        
-        {/* Macros Card */}
-        <MacrosCard
-          carbs={mockData.macros.carbs}
-          protein={mockData.macros.protein}
-          fat={mockData.macros.fat}
-        />
-        
-        {/* Health Metrics Grid */}
+        {/* Top Health Metrics Grid - Glucose & Weight */}
         <div className="grid grid-cols-2 gap-4">
-          {/* Glucose Chart */}
           <GlucoseCard
             currentLevel={mockData.glucose.currentLevel}
             unit={mockData.glucose.unit}
@@ -100,13 +83,29 @@ const Dashboard = () => {
             status={mockData.glucose.status}
           />
           
-          {/* Weight Chart */}
           <WeightCard
             currentWeight={mockData.weight.current}
             previousWeight={mockData.weight.previous}
             unit={mockData.weight.unit}
             trend={mockData.weight.trend}
             chartData={mockData.weight.chartData}
+          />
+        </div>
+        
+        {/* Nutrition Grid - Calories & Macros on same row */}
+        <div className="grid grid-cols-2 gap-4">
+          <CaloriesCard
+            eaten={mockData.calories.eaten}
+            burned={mockData.calories.burned}
+            remaining={mockData.calories.remaining}
+            target={mockData.calories.target}
+            goalProgress={mockData.calories.goalProgress}
+          />
+          
+          <MacrosCard
+            carbs={mockData.macros.carbs}
+            protein={mockData.macros.protein}
+            fat={mockData.macros.fat}
           />
         </div>
         

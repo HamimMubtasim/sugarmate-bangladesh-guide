@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import GlucoseLog from "./pages/GlucoseLog";
 import FoodScanner from "./pages/FoodScanner";
+import FoodLogs from "./pages/FoodLogs";
 import Medicine from "./pages/Medicine";
 import Profile from "./pages/Profile";
 import PersonalInformation from "./pages/PersonalInformation";
@@ -35,8 +36,9 @@ const App = () => (
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/glucose" element={<GlucoseLog />} />
-          <Route path="/scanner" element={<FoodScanner />} />
-          <Route path="/medicine" element={<Medicine />} />
+        <Route path="/scanner" element={<FoodScanner />} />
+        <Route path="/food-logs" element={<FoodLogs />} />
+        <Route path="/medicine" element={<Medicine />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/personal-information" element={<PersonalInformation />} />
           <Route path="/medical-records" element={<MedicalRecords />} />
