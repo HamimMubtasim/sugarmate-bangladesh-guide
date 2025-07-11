@@ -74,38 +74,29 @@ const Dashboard = () => {
         {/* AI Coach Card */}
         <AICoachCard />
         
-        {/* Top Health Metrics Grid - Glucose & Weight */}
+        {/* Health Metrics Grid - 2x2 Square Layout */}
         <div className="grid grid-cols-2 gap-4">
           <GlucoseCard
             currentLevel={mockData.glucose.currentLevel}
             unit={mockData.glucose.unit}
-            trend={mockData.glucose.trend}
             status={mockData.glucose.status}
           />
           
           <WeightCard
             currentWeight={mockData.weight.current}
-            previousWeight={mockData.weight.previous}
             unit={mockData.weight.unit}
             trend={mockData.weight.trend}
-            chartData={mockData.weight.chartData}
           />
-        </div>
-        
-        {/* Nutrition Grid - Calories & Macros on same row */}
-        <div className="grid grid-cols-2 gap-4">
+          
           <CaloriesCard
-            eaten={mockData.calories.eaten}
             burned={mockData.calories.burned}
-            remaining={mockData.calories.remaining}
-            target={mockData.calories.target}
-            goalProgress={mockData.calories.goalProgress}
           />
           
           <MacrosCard
-            carbs={mockData.macros.carbs}
-            protein={mockData.macros.protein}
-            fat={mockData.macros.fat}
+            totalGrams={mockData.macros.carbs.current + mockData.macros.protein.current + mockData.macros.fat.current}
+            carbs={mockData.macros.carbs.current}
+            protein={mockData.macros.protein.current}
+            fat={mockData.macros.fat.current}
           />
         </div>
         

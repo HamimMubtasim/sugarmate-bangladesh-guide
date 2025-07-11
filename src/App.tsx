@@ -18,6 +18,7 @@ import MedicalRecords from "./pages/MedicalRecords";
 import Notifications from "./pages/Notifications";
 import LanguageRegion from "./pages/LanguageRegion";
 import AppSettings from "./pages/AppSettings";
+import Weight from "./pages/Weight";
 import Onboarding from "./pages/Onboarding";
 import NotFound from "./pages/NotFound";
 
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/glucose" element={<GlucoseLog />} />
+          <Route path="/weight" element={<Weight />} />
         <Route path="/scanner" element={<FoodScanner />} />
         <Route path="/food-logs" element={<FoodLogs />} />
         <Route path="/medicine" element={<Medicine />} />

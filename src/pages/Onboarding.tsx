@@ -12,6 +12,8 @@ const Onboarding = () => {
     name: '',
     phone: '',
     age: '',
+    height: '',
+    weight: '',
     gender: 'male' as 'male' | 'female' | 'other',
     diabetesType: 'type2' as 'type1' | 'type2' | 'gestational',
     diagnosisYear: new Date().getFullYear(),
@@ -101,6 +103,34 @@ const Onboarding = () => {
                   <option value="female">Female</option>
                   <option value="other">Other</option>
                 </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Height (cm)
+                </label>
+                <input
+                  type="number"
+                  value={formData.height}
+                  onChange={(e) => updateFormData('height', e.target.value)}
+                  className="w-full p-4 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-primary focus:border-transparent"
+                  placeholder="170"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Weight (kg)
+                </label>
+                <input
+                  type="number"
+                  value={formData.weight}
+                  onChange={(e) => updateFormData('weight', e.target.value)}
+                  className="w-full p-4 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-primary focus:border-transparent"
+                  placeholder="70"
+                />
               </div>
             </div>
           </div>
@@ -197,7 +227,7 @@ const Onboarding = () => {
   const canProceed = () => {
     switch (step) {
       case 1:
-        return formData.name && formData.phone && formData.age;
+        return formData.name && formData.phone && formData.age && formData.height && formData.weight;
       case 2:
         return formData.diabetesType && formData.diagnosisYear;
       case 3:
