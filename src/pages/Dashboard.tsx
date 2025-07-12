@@ -64,16 +64,6 @@ const Dashboard = () => {
       />
       
       <div className="px-6 pt-6 pb-24 space-y-6 overflow-x-hidden">
-        {/* Daily Streak Card */}
-        <StreakCard
-          currentStreak={mockData.streak.current}
-          streakType={mockData.streak.type}
-          isToday={mockData.streak.isToday}
-        />
-        
-        {/* AI Coach Card */}
-        <AICoachCard />
-        
         {/* Health Metrics Grid - 2x2 Square Layout */}
         <div className="grid grid-cols-2 gap-4">
           <GlucoseCard
@@ -99,6 +89,16 @@ const Dashboard = () => {
             fat={mockData.macros.fat.current}
           />
         </div>
+        
+        {/* Daily Streak Card */}
+        <StreakCard
+          currentStreak={mockData.streak.current}
+          streakType={mockData.streak.type}
+          isToday={mockData.streak.isToday}
+        />
+        
+        {/* AI Coach Card */}
+        <AICoachCard />
         
         {/* Steps Card */}
         <StepsCard

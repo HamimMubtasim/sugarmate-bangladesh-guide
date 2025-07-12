@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Header from '@/components/Layout/Header';
 import BottomNavigation from '@/components/Layout/BottomNavigation';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   Plus, 
   Pill, 
@@ -273,18 +274,240 @@ const Medicine = () => {
     </div>
   );
 
+  const [showAddSchedule, setShowAddSchedule] = useState(false);
+  const [newSchedule, setNewSchedule] = useState({
+    medicineId: '',
+    timeOfDay: '',
+    daysOfWeek: [1, 2, 3, 4, 5, 6, 7],
+    reminderEnabled: true
+  });
+
+  const addSchedule = () => {
+    if (newSchedule.medicineId && newSchedule.timeOfDay) {
+      const medicine = medicines.find(m => m.id === newSchedule.medicineId);
+      if (medicine) {
+        const schedule: MedicineSchedule = {
+          id: Date.now().toString(),
+          timeOfDay: newSchedule.timeOfDay,
+          daysOfWeek: newSchedule.daysOfWeek,
+          isActive: true,
+          reminderEnabled: newSchedule.reminderEnabled
+        };
+        
+        const updatedMedicines = medicines.map(m => 
+          m.id === newSchedule.medicineId 
+            ? { ...m, schedules: [...m.schedules, schedule] }
+            : m
+        );
+        setMedicines(updatedMedicines);
+        setNewSchedule({
+          medicineId: '',
+          timeOfDay: '',
+          daysOfWeek: [1, 2, 3, 4, 5, 6, 7],
+          reminderEnabled: true
+        });
+        setShowAddSchedule(false);
+      }
+    }
+  };
+
   const renderSchedulesTab = () => (
     <div className="space-y-4">
-      <div className="text-center py-8">
-        <Clock size={48} className="mx-auto text-gray-400 mb-4" />
-        <h3 className="text-lg font-semibold text-gray-800 mb-2">Medicine Schedules</h3>
-        <p className="text-gray-600 mb-4">Set up reminders for your medications</p>
-        <button className="px-6 py-3 bg-primary text-white rounded-xl font-medium">
-          Add Schedule
-        </button>
-      </div>
+      <button
+        onClick={() => setShowAddSchedule(true)}
+        className="w-full p-4 bg-primary text-white rounded-2xl flex items-center justify-center space-x-2 shadow-lg"
+      >
+        <Plus size={20} />
+        <span className="font-semibold">Add Schedule</span>
+      </button>
+
+      {medicines.filter(m => m.schedules.length > 0).map((medicine) => (
+        <div key={medicine.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+          <h3 className="font-semibold text-gray-800 mb-3">{medicine.name}</h3>
+          <div className="space-y-2">
+            {medicine.schedules.map((schedule) => (
+              <div key={schedule.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                <div className="flex items-center space-x-3">
+                  <Clock size={16} className="text-primary" />
+                  <span className="font-medium">{schedule.timeOfDay}</span>
+                  <span className="text-sm text-gray-600">
+                    {schedule.daysOfWeek.length === 7 ? 'Daily' : `${schedule.daysOfWeek.length} days/week`}
+                  </span>
+                </div>
+                {schedule.reminderEnabled && <Bell size={16} className="text-primary" />}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {medicines.filter(m => m.schedules.length > 0).length === 0 && (
+        <div className="text-center py-8">
+          <Clock size={48} className="mx-auto text-gray-400 mb-4" />
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">No Schedules Yet</h3>
+          <p className="text-gray-600">Add medicines first, then create schedules for them</p>
+        </div>
+      )}
+
+      {/* Add Schedule Modal */}
+      {showAddSchedule && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">Add Medicine Schedule</h2>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Select Medicine</label>
+                <select
+                  value={newSchedule.medicineId}
+                  onChange={(e) => setNewSchedule({ ...newSchedule, medicineId: e.target.value })}
+                  className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
+                >
+                  <option value="">Choose a medicine</option>
+                  {medicines.map((medicine) => (
+                    <option key={medicine.id} value={medicine.id}>
+                      {medicine.name} - {medicine.dosage}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Time</label>
+                <input
+                  type="time"
+                  value={newSchedule.timeOfDay}
+                  onChange={(e) => setNewSchedule({ ...newSchedule, timeOfDay: e.target.value })}
+                  className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Days of Week</label>
+                <div className="grid grid-cols-7 gap-2">
+                  {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
+                    <button
+                      key={index}
+                      onClick={() => {
+                        const dayNum = index + 1;
+                        const isSelected = newSchedule.daysOfWeek.includes(dayNum);
+                        setNewSchedule({
+                          ...newSchedule,
+                          daysOfWeek: isSelected 
+                            ? newSchedule.daysOfWeek.filter(d => d !== dayNum)
+                            : [...newSchedule.daysOfWeek, dayNum]
+                        });
+                      }}
+                      className={`p-2 rounded-xl text-sm font-medium ${
+                        newSchedule.daysOfWeek.includes(index + 1)
+                          ? 'bg-primary text-white'
+                          : 'bg-gray-100 text-gray-600'
+                      }`}
+                    >
+                      {day}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-gray-700">Enable Reminders</label>
+                <button
+                  onClick={() => setNewSchedule({ ...newSchedule, reminderEnabled: !newSchedule.reminderEnabled })}
+                  className={`w-12 h-6 rounded-full flex items-center ${
+                    newSchedule.reminderEnabled ? 'bg-primary justify-end pr-1' : 'bg-gray-200 justify-start pl-1'
+                  }`}
+                >
+                  <div className="w-4 h-4 bg-white rounded-full"></div>
+                </button>
+              </div>
+            </div>
+
+            <div className="flex space-x-3 mt-6">
+              <button
+                onClick={() => setShowAddSchedule(false)}
+                className="flex-1 p-3 border border-gray-300 text-gray-700 rounded-xl font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={addSchedule}
+                disabled={!newSchedule.medicineId || !newSchedule.timeOfDay}
+                className="flex-1 p-3 bg-primary text-white rounded-xl font-medium disabled:opacity-50"
+              >
+                Add Schedule
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
+
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanResults, setScanResults] = useState(null);
+
+  const handleScanPrescription = async () => {
+    try {
+      setIsScanning(true);
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.capture = 'environment';
+      
+      input.onchange = async (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = async (event) => {
+            try {
+              const base64 = event.target?.result as string;
+              
+              const { data, error } = await supabase.functions.invoke('analyze-prescription', {
+                body: { image: base64 }
+              });
+
+              if (error) throw error;
+              
+              setScanResults(data);
+            } catch (error) {
+              console.error('Error analyzing prescription:', error);
+              alert('Failed to analyze prescription. Please try again.');
+            } finally {
+              setIsScanning(false);
+            }
+          };
+          reader.readAsDataURL(file);
+        } else {
+          setIsScanning(false);
+        }
+      };
+      
+      input.click();
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+      setIsScanning(false);
+    }
+  };
+
+  const addPrescriptionMedicines = () => {
+    if (scanResults?.prescriptionData?.medicines) {
+      const newMedicines = scanResults.prescriptionData.medicines.map(med => ({
+        id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+        name: med.name,
+        dosage: med.dosage,
+        type: med.type,
+        currentStock: 30, // Default stock
+        lowStockThreshold: 5,
+        expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 1 year from now
+        schedules: []
+      }));
+      
+      setMedicines(prev => [...prev, ...newMedicines]);
+      setScanResults(null);
+      setActiveTab('medicines');
+    }
+  };
 
   const renderScannerTab = () => (
     <div className="space-y-4">
@@ -296,13 +519,48 @@ const Medicine = () => {
         <p className="text-gray-600 mb-6">
           Scan your prescription to automatically create medicine schedules and inventory
         </p>
-        <button className="w-full py-3 bg-primary text-white rounded-xl font-medium mb-3">
-          Scan Prescription
+        <button 
+          onClick={handleScanPrescription}
+          disabled={isScanning}
+          className="w-full py-3 bg-primary text-white rounded-xl font-medium mb-3 disabled:opacity-50"
+        >
+          {isScanning ? 'Scanning...' : 'Scan Prescription'}
         </button>
         <p className="text-xs text-gray-500">
           Our AI will read your prescription and set up medication reminders automatically
         </p>
       </div>
+
+      {scanResults && (
+        <div className="bg-white rounded-2xl p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Scan Results</h3>
+          
+          {scanResults.prescriptionData?.medicines?.length > 0 ? (
+            <div className="space-y-3">
+              <h4 className="font-medium text-gray-700">Detected Medicines:</h4>
+              {scanResults.prescriptionData.medicines.map((med, index) => (
+                <div key={index} className="p-3 bg-gray-50 rounded-xl">
+                  <p className="font-medium">{med.name}</p>
+                  <p className="text-sm text-gray-600">{med.dosage} • {med.type}</p>
+                  {med.frequency && (
+                    <p className="text-sm text-gray-600">{med.frequency} times per day</p>
+                  )}
+                </div>
+              ))}
+              <button
+                onClick={addPrescriptionMedicines}
+                className="w-full py-3 bg-primary text-white rounded-xl font-medium mt-4"
+              >
+                Add These Medicines
+              </button>
+            </div>
+          ) : (
+            <div className="text-center py-4">
+              <p className="text-gray-600">No medicines detected. Please try scanning again with a clearer image.</p>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="bg-white rounded-2xl p-6">
         <h4 className="font-semibold text-gray-800 mb-3">How it works:</h4>

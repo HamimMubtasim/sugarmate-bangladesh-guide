@@ -1,10 +1,11 @@
 import React from 'react';
 import { ArrowLeft, Bell, Clock, AlertCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Header from '@/components/Layout/Header';
 
 const Notifications = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -17,11 +18,11 @@ const Notifications = () => {
       
       <div className="px-6 pt-6 pb-24 space-y-6">
         <button 
-          onClick={() => navigate('/profile')}
+          onClick={() => navigate(location.state?.from || '/profile')}
           className="flex items-center space-x-2 text-primary"
         >
           <ArrowLeft size={20} />
-          <span>Back to Profile</span>
+          <span>Back</span>
         </button>
 
         <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-6">
