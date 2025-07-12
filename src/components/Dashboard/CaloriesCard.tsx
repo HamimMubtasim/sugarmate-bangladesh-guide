@@ -11,9 +11,7 @@ const CaloriesCard: React.FC<CaloriesCardProps> = ({ burned }) => {
   const burnedProgress = Math.min((burned / 400) * 100, 100); // Assuming 400 kCal target
 
   return (
-    <div 
-      onClick={() => navigate('/food-logs')}
-      className="aspect-square p-4 bg-white rounded-3xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all duration-200 flex flex-col"
+    <div className="aspect-square p-4 bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col h-full w-full"
     >
       <div className="flex items-center justify-between mb-2">
         <Flame size={16} className="text-primary" />

@@ -256,12 +256,15 @@ export type Database = {
           gender: string | null
           healthcare_provider_contact: string | null
           healthcare_provider_name: string | null
+          height: number | null
           id: string
           name: string | null
           phone: string | null
           preferred_language: string | null
           updated_at: string | null
           user_id: string | null
+          weight: number | null
+          weight_unit: string | null
         }
         Insert: {
           age?: number | null
@@ -271,12 +274,15 @@ export type Database = {
           gender?: string | null
           healthcare_provider_contact?: string | null
           healthcare_provider_name?: string | null
+          height?: number | null
           id?: string
           name?: string | null
           phone?: string | null
           preferred_language?: string | null
           updated_at?: string | null
           user_id?: string | null
+          weight?: number | null
+          weight_unit?: string | null
         }
         Update: {
           age?: number | null
@@ -286,12 +292,45 @@ export type Database = {
           gender?: string | null
           healthcare_provider_contact?: string | null
           healthcare_provider_name?: string | null
+          height?: number | null
           id?: string
           name?: string | null
           phone?: string | null
           preferred_language?: string | null
           updated_at?: string | null
           user_id?: string | null
+          weight?: number | null
+          weight_unit?: string | null
+        }
+        Relationships: []
+      }
+      weight_logs: {
+        Row: {
+          created_at: string
+          id: string
+          logged_at: string
+          notes: string | null
+          unit: string
+          user_id: string
+          weight: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          logged_at?: string
+          notes?: string | null
+          unit?: string
+          user_id: string
+          weight: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          logged_at?: string
+          notes?: string | null
+          unit?: string
+          user_id?: string
+          weight?: number
         }
         Relationships: []
       }

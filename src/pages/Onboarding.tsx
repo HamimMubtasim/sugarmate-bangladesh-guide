@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { ChevronRight } from 'lucide-react';
 
 const Onboarding = () => {
@@ -19,23 +20,56 @@ const Onboarding = () => {
     diagnosisYear: new Date().getFullYear(),
   });
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step < 3) {
       setStep(step + 1);
     } else {
-      // Complete onboarding
-      const userData = {
-        id: Date.now().toString(),
-        name: formData.name,
-        phone: formData.phone,
-        age: parseInt(formData.age),
-        gender: formData.gender,
-        diabetesType: formData.diabetesType,
-        diagnosisYear: formData.diagnosisYear,
-      };
-      
-      login(userData);
-      navigate('/dashboard');
+      // Complete onboarding and create profile
+      try {
+        const userId = crypto.randomUUID(); // In real app, this would be auth.uid()
+        
+        const { data, error } = await supabase
+          .from('profiles')
+          .insert([
+            {
+              user_id: userId,
+              name: formData.name,
+              phone: formData.phone,
+              age: parseInt(formData.age),
+              height: parseInt(formData.height),
+              weight: parseFloat(formData.weight),
+              weight_unit: 'kg',
+              gender: formData.gender,
+              diabetes_type: formData.diabetesType,
+              diagnosis_year: formData.diagnosisYear,
+            }
+          ])
+          .select();
+
+        if (error) {
+          console.error('Error creating profile:', error);
+          alert('Failed to create profile. Please try again.');
+          return;
+        }
+
+        console.log('Profile created successfully:', data);
+        
+        const userData = {
+          id: userId,
+          name: formData.name,
+          phone: formData.phone,
+          age: parseInt(formData.age),
+          gender: formData.gender,
+          diabetesType: formData.diabetesType,
+          diagnosisYear: formData.diagnosisYear,
+        };
+        
+        login(userData);
+        navigate('/');
+      } catch (error) {
+        console.error('Error during onboarding:', error);
+        alert('Registration failed. Please try again.');
+      }
     }
   };
 

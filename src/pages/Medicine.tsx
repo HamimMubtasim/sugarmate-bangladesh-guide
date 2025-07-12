@@ -456,7 +456,8 @@ const Medicine = () => {
       input.capture = 'environment';
       
       input.onchange = async (e) => {
-        const file = e.target.files?.[0];
+        const target = e.target as HTMLInputElement;
+        const file = target.files?.[0];
         if (file) {
           const reader = new FileReader();
           reader.onload = async (event) => {
