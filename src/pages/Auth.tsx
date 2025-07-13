@@ -207,8 +207,6 @@ const Auth = () => {
             </svg>
           </div>
           
-          <h1 className="text-3xl font-bold text-foreground mb-2">Glucovia</h1>
-          <p className="text-muted-foreground">Your Diabetes Management Companion</p>
         </div>
 
         <Card className="w-full">
