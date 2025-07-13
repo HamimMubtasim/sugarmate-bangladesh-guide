@@ -6,7 +6,7 @@
 /* Definition of the design system for diabetes management app */
 @layer base {
   :root {
-    --background: 248 250 252;
+    --background: 75 100% 93%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
