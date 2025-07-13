@@ -1,6 +1,7 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Header from '@/components/Layout/Header';
 import BottomNavigation from '@/components/Layout/BottomNavigation';
@@ -15,6 +16,21 @@ import QuickStatsGrid from '@/components/Dashboard/QuickStatsGrid';
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const [profile, setProfile] = useState<any>(null);
+
+  useEffect(() => {
+    if (user) {
+      const fetchProfile = async () => {
+        const { data } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+        setProfile(data);
+      };
+      fetchProfile();
+    }
+  }, [user]);
   const { t } = useLanguage();
 
   // Mock data - in real app, this would come from API/database
@@ -59,7 +75,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header 
-        title={`Hey, ${user?.name || 'Safayer'}!`}
+        title={`Hey, ${profile?.name || 'User'}!`}
         subtitle="Have a refreshing evening!"
       />
       

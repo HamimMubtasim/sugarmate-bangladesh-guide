@@ -1,14 +1,30 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, Settings, FileText, Bell, Globe, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Layout/Header';
 import BottomNavigation from '@/components/Layout/BottomNavigation';
 
 const Profile = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [profile, setProfile] = useState<any>(null);
+
+  useEffect(() => {
+    if (user) {
+      const fetchProfile = async () => {
+        const { data } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+        setProfile(data);
+      };
+      fetchProfile();
+    }
+  }, [user]);
 
   const menuItems = [
     { icon: User, label: 'Personal Information', action: () => navigate('/personal-information') },
@@ -16,7 +32,7 @@ const Profile = () => {
     { icon: Bell, label: 'Notifications', action: () => navigate('/notifications') },
     { icon: Globe, label: 'Language & Region', action: () => navigate('/language-region') },
     { icon: Settings, label: 'App Settings', action: () => navigate('/app-settings') },
-    { icon: LogOut, label: 'Sign Out', action: logout, danger: true },
+    { icon: LogOut, label: 'Sign Out', action: async () => await logout(), danger: true },
   ];
 
   return (
@@ -35,22 +51,22 @@ const Profile = () => {
             </div>
             
             <div className="flex-1">
-              <h2 className="text-xl font-bold text-gray-800">{user?.name}</h2>
-              <p className="text-gray-600">{user?.phone}</p>
+              <h2 className="text-xl font-bold text-gray-800">{profile?.name || user?.email}</h2>
+              <p className="text-gray-600">{profile?.phone}</p>
               <p className="text-sm text-primary mt-1">
-                {user?.diabetesType?.replace(/(\w)(\w*)/g, (g, a, b) => a.toUpperCase() + b)} Diabetes
+                {profile?.diabetes_type?.replace(/(\w)(\w*)/g, (g: any, a: string, b: string) => a.toUpperCase() + b)} Diabetes
               </p>
             </div>
           </div>
           
           <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-gray-100">
             <div className="text-center">
-              <p className="text-2xl font-bold text-gray-800">{user?.age}</p>
+              <p className="text-2xl font-bold text-gray-800">{profile?.age}</p>
               <p className="text-sm text-gray-600">Age</p>
             </div>
             <div className="text-center">
               <p className="text-2xl font-bold text-gray-800">
-                {user ? new Date().getFullYear() - user.diagnosisYear : 0}
+                {profile ? new Date().getFullYear() - profile.diagnosis_year : 0}
               </p>
               <p className="text-sm text-gray-600">Years with Diabetes</p>
             </div>

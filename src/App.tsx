@@ -20,6 +20,7 @@ import LanguageRegion from "./pages/LanguageRegion";
 import AppSettings from "./pages/AppSettings";
 import Weight from "./pages/Weight";
 import Onboarding from "./pages/Onboarding";
+import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
           <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/glucose" element={<GlucoseLog />} />

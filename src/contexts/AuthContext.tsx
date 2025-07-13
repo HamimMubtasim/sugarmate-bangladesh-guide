@@ -1,48 +1,57 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-
-interface User {
-  id: string;
-  name: string;
-  phone: string;
-  email?: string;
-  diabetesType: 'type1' | 'type2' | 'gestational';
-  diagnosisYear: number;
-  age: number;
-  gender: 'male' | 'female' | 'other';
-}
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { User as SupabaseUser, Session } from '@supabase/supabase-js';
 
 interface AuthContextType {
-  user: User | null;
-  login: (userData: User) => void;
-  logout: () => void;
-  updateUser: (userData: Partial<User>) => void;
+  user: SupabaseUser | null;
+  session: Session | null;
+  loading: boolean;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const login = (userData: User) => {
-    setUser(userData);
-  };
+  useEffect(() => {
+    // Set up auth state listener first
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+      }
+    );
 
-  const logout = () => {
-    setUser(null);
-  };
+    // Then check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
 
-  const updateUser = (userData: Partial<User>) => {
-    if (user) {
-      setUser({ ...user, ...userData });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut();
+      setUser(null);
+      setSession(null);
+    } catch (error) {
+      console.error('Error logging out:', error);
     }
   };
 
-  const isAuthenticated = !!user;
+  const isAuthenticated = !!user && !!session;
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, updateUser, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, session, loading, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

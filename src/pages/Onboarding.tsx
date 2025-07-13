@@ -7,7 +7,7 @@ import { ChevronRight } from 'lucide-react';
 
 const Onboarding = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { user } = useAuth();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
@@ -64,8 +64,7 @@ const Onboarding = () => {
           diagnosisYear: formData.diagnosisYear,
         };
         
-        login(userData);
-        navigate('/');
+        navigate('/dashboard');
       } catch (error) {
         console.error('Error during onboarding:', error);
         alert('Registration failed. Please try again.');
