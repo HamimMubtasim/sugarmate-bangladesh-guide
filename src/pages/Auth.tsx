@@ -219,7 +219,6 @@ const Auth = () => {
             <TabsContent value="login">
               <CardHeader>
                 <CardTitle>Welcome back</CardTitle>
-                <CardDescription>Enter your credentials to access your account</CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleLogin} className="space-y-4">

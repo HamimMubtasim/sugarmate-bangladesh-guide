@@ -48,17 +48,17 @@
     /* Health metrics colors */
     --glucose-low: 0 84% 60%;
     --glucose-normal: 134 61% 50%;
-    --glucose-high: 0 0% 100%;
+    --glucose-high: 249 250 251;
     --glucose-critical: 0 100% 50%;
     
     /* Dashboard colors */
     --chart-blue: 205 100% 87%;
     --chart-green: 134 61% 88%;
-    --chart-yellow: 0 0% 100%;
+    --chart-yellow: 249 250 251;
     --heart-rate: 205 85% 60%;
     --metrics-green: 134 61% 88%;
     --metrics-blue: 205 100% 87%;
-    --metrics-yellow: 0 0% 100%;
+    --metrics-yellow: 249 250 251;
   }
 
   .dark {
