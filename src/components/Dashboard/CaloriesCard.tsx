@@ -17,24 +17,24 @@ const CaloriesCard: React.FC<CaloriesCardProps> = ({ burned }) => {
         <Flame size={16} className="text-primary" />
       </div>
       
-      <div className="flex-1 flex flex-col justify-center">
+      <div className="flex-1 flex flex-col justify-center min-h-0">
         <div className="flex items-baseline gap-1 mb-1">
-          <span className="text-3xl font-bold text-gray-900">{burned}</span>
-          <span className="text-sm text-gray-500">kCal</span>
+          <span className="text-2xl font-bold text-gray-900 truncate">{burned}</span>
+          <span className="text-xs text-gray-500 flex-shrink-0">kCal</span>
         </div>
-        <span className="text-xs text-gray-500 mb-2">Burnt</span>
+        <span className="text-xs text-gray-500 mb-1 truncate">Burnt</span>
         
-        <h3 className="text-lg font-semibold text-primary mb-3">Calories</h3>
+        <h3 className="text-base font-semibold text-primary mb-2 truncate">Calories</h3>
         
         {/* Progress bar */}
-        <div className="mb-2">
+        <div className="min-h-0">
           <div className="flex justify-between text-xs text-gray-400 mb-1">
-            <span>Burnt</span>
-            <span>1640 kCal</span>
+            <span className="truncate">Burnt</span>
+            <span className="flex-shrink-0">1640 kCal</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-1.5">
             <div 
-              className="bg-primary h-2 rounded-full transition-all duration-300"
+              className="bg-primary h-1.5 rounded-full transition-all duration-300"
               style={{ width: `${burnedProgress}%` }}
             />
           </div>

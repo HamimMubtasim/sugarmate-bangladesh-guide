@@ -35,14 +35,14 @@ const GlucoseCard: React.FC<GlucoseCardProps> = ({
         <Activity size={16} className="text-primary" />
       </div>
       
-      <div className="flex-1 flex flex-col justify-center">
+      <div className="flex-1 flex flex-col justify-center min-h-0">
         <div className="flex items-baseline gap-1 mb-1">
-          <span className="text-3xl font-bold text-gray-900">{currentLevel}</span>
-          <span className="text-sm text-gray-500">{unit}</span>
+          <span className="text-2xl font-bold text-gray-900 truncate">{currentLevel}</span>
+          <span className="text-xs text-gray-500 flex-shrink-0">{unit}</span>
         </div>
         
-        <h3 className="text-lg font-semibold text-primary mb-1">Glucose</h3>
-        <p className="text-sm text-gray-600 mb-3">{getStatusText()}</p>
+        <h3 className="text-base font-semibold text-primary mb-1 truncate">Glucose</h3>
+        <p className="text-xs text-gray-600 truncate">{getStatusText()}</p>
       </div>
       
       <p className="text-xs text-gray-400 mt-auto">Tap to View Details</p>

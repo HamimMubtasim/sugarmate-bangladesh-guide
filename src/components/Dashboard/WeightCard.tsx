@@ -26,14 +26,14 @@ const WeightCard: React.FC<WeightCardProps> = ({
         {trend === 'down' && <span className="text-xs text-green-500">↘ 0.3</span>}
       </div>
       
-      <div className="flex-1 flex flex-col justify-center">
+      <div className="flex-1 flex flex-col justify-center min-h-0">
         <div className="flex items-baseline gap-1 mb-1">
-          <span className="text-3xl font-bold text-gray-900">{currentWeight}</span>
-          <span className="text-sm text-gray-500">{unit}</span>
+          <span className="text-2xl font-bold text-gray-900 truncate">{currentWeight}</span>
+          <span className="text-xs text-gray-500 flex-shrink-0">{unit}</span>
         </div>
         
-        <h3 className="text-lg font-semibold text-primary mb-1">Weight</h3>
-        <p className="text-sm text-gray-600 mb-3">Today</p>
+        <h3 className="text-base font-semibold text-primary mb-1 truncate">Weight</h3>
+        <p className="text-xs text-gray-600 truncate">Today</p>
       </div>
       
       <button 
